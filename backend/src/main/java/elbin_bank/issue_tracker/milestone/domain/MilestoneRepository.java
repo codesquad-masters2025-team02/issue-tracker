@@ -1,9 +1,10 @@
 package elbin_bank.issue_tracker.milestone.domain;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MilestoneRepository {
 
-    List<Milestone> findMilestonesByMilestoneIds(List<Long> milestoneIds);
+    Map<Long, String> findMilestonesByMilestoneIds(List<Long> milestoneIds);
 
 }
