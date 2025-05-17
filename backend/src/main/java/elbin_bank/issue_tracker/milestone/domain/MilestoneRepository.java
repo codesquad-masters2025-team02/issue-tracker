@@ -5,6 +5,6 @@ import java.util.Map;
 
 public interface MilestoneRepository {
 
-    Map<Long, String> findMilestonesByMilestoneIds(List<Long> milestoneIds);
+    Map<Long, String> findTitlesByIds(List<Long> ids);
 
 }
