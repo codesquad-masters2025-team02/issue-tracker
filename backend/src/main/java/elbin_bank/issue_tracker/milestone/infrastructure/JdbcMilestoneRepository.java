@@ -19,7 +19,7 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
     }
 
     @Override
-    public Map<Long,String> findMilestonesByMilestoneIds(List<Long> milestoneIds) {
+    public Map<Long,String> findTitlesByIds(List<Long> milestoneIds) {
         if(milestoneIds == null || milestoneIds.isEmpty()) {
             return Map.of();
         }
@@ -27,10 +27,10 @@ public class JdbcMilestoneRepository implements MilestoneRepository {
         String sql = """
         SELECT id, title
         FROM milestone
-        WHERE id IN (:milestoneIds)
+        WHERE id IN (:ids)
         """;
 
-        var params = new MapSqlParameterSource("milestoneIds", milestoneIds);
+        var params = new MapSqlParameterSource("ids", milestoneIds);
 
         return jdbc.query(sql, params, rs -> {
             Map<Long, String> result = new HashMap<>();
