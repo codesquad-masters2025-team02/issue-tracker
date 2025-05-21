@@ -72,7 +72,6 @@ CREATE TABLE `comment`
     `deleted_at` DATETIME NULL,
     FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-    FOREIGN KEY (`label_id`) REFERENCES `label` (`id`)
 );
 
 CREATE TABLE assignee

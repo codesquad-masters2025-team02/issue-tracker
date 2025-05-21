@@ -39,10 +39,10 @@ public class JdbcCommentsQueryRepository implements CommentsQueryRepository {
         }
 
         String sql = """
-        SELECT id, nickname, profile_image_url
-        FROM user
-        WHERE id IN (:Ids)
-        """;
+                SELECT id, nickname, profile_image_url
+                FROM user
+                WHERE id IN (:Ids)
+                """;
 
         var params = new MapSqlParameterSource("Ids", userIds);
 
@@ -59,9 +59,5 @@ public class JdbcCommentsQueryRepository implements CommentsQueryRepository {
             return result;
         });
     }
-
-
-
-
 
 }
