@@ -1,6 +1,6 @@
 package elbin_bank.issue_tracker.comment.application.query;
 
-import elbin_bank.issue_tracker.comment.application.query.dto.CommentSummaryDto;
+import elbin_bank.issue_tracker.comment.application.query.dto.CommentsSummaryDto;
 import elbin_bank.issue_tracker.comment.application.query.dto.CommentsResponseDto;
 import elbin_bank.issue_tracker.comment.application.query.dto.UserDto;
 import elbin_bank.issue_tracker.comment.domain.Comment;
@@ -28,7 +28,7 @@ public class GetCommentsListService {
         Map<Long, UserDto> commentUsers = commentsQueryRepository.findUsersByIds(userIds);
 
         return new CommentsResponseDto(comments.stream()
-                .map(comment -> new CommentSummaryDto(
+                .map(comment -> new CommentsSummaryDto(
                         comment.getId(),
                         commentUsers.get(comment.getUserId()),
                         comment.getContents(),
