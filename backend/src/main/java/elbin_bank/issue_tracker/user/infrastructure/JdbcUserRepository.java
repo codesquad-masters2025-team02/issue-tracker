@@ -1,6 +1,8 @@
 package elbin_bank.issue_tracker.user.infrastructure;
 
+import elbin_bank.issue_tracker.comment.application.query.dto.UserDto;
 import elbin_bank.issue_tracker.user.domain.UserRepository;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
