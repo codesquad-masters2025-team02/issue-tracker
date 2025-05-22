@@ -15,23 +15,11 @@ public class User extends BaseEntity {
 
     @Id
     private Long id;
-
-    @Column("github_id")
     private Long githubId;
-
-    @Column("login")
     private String login;
-
-    @Column("password")
     private String password;
-
-    @Column("nickname")
     private String nickname;
-
-    @Column("profile_image_url")
     private String profileImageUrl;
-
-    @Column("uuid")
     private String uuid;
 
 }
