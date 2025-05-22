@@ -1,6 +1,6 @@
 package elbin_bank.issue_tracker.issue.application.query;
 
-import elbin_bank.issue_tracker.issue.application.query.dto.IssueSummaryDto;
+import elbin_bank.issue_tracker.issue.application.query.dto.IssueDto;
 import elbin_bank.issue_tracker.issue.application.query.dto.IssuesResponseDto;
 import elbin_bank.issue_tracker.issue.domain.Issue;
 import elbin_bank.issue_tracker.issue.domain.IssueRepository;
@@ -46,8 +46,8 @@ public class GetFilteredIssueListService {
         Map<Long, List<String>> assigneesMap = issueRepository.findAssigneesByIssueIds(issueIds);
         Map<Long, String> milestoneNames = milestoneRepository.findTitlesByIds(milestoneIds);
 
-        List<IssueSummaryDto> dtos = issues.stream().map(i ->
-                new IssueSummaryDto(
+        List<IssueDto> dtos = issues.stream().map(i ->
+                new IssueDto(
                         i.getId(),
                         authors.get(i.getAuthorId()),
                         i.getTitle(),

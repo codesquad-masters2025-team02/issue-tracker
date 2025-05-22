@@ -5,7 +5,7 @@ import elbin_bank.issue_tracker.label.application.query.dto.LabelsDto;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record IssueSummaryDto(
+public record IssueDto(
         Long id,
         String author,
         String title,
