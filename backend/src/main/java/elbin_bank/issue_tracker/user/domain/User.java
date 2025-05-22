@@ -14,7 +14,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class User extends BaseEntity {
 
     @Id
-    private Long id;
+    private long id;
     private Long githubId;
     private String login;
     private String password;

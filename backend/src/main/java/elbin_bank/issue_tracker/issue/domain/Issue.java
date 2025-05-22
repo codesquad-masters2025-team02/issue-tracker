@@ -17,15 +17,11 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Issue extends BaseEntity {
 
     @Id
-    private Long id;
-    private Long authorId;
-    private Long milestoneId;
+    private long id;
+    private long authorId;
+    private long milestoneId;
     private String title;
     private String contents;
-    private Boolean isClosed;
-
-    public boolean isClosed() {
-        return Boolean.TRUE.equals(isClosed);
-    }
+    private boolean isClosed;
 
 }
