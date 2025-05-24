@@ -15,23 +15,23 @@ public class FilterStrategyContext {
     }
 
     public SqlAndParams buildSql(String q) {
-        List<String> whereClauses = new ArrayList<>();
+        List<String> clauses = new ArrayList<>();
         Map<String, Object> params = new HashMap<>();
 
         for (String part : q.trim().split("\\s+")) {
             for (FilterStrategy strat : strategies) {
                 if (strat.supports(part)) {
-                    whereClauses.add(strat.getSqlPart());
+                    clauses.add(strat.getSqlPart());
                     params.putAll(strat.getParameters(part));
                 }
             }
         }
 
-        if (whereClauses.isEmpty()) {
+        if (clauses.isEmpty()) {
             return new SqlAndParams("", params);
         }
 
-        return new SqlAndParams(" WHERE " + String.join(" AND ", whereClauses), params);
+        return new SqlAndParams(String.join(" AND ", clauses), params);
     }
 
     public record SqlAndParams(String sql, Map<String, Object> params) {
