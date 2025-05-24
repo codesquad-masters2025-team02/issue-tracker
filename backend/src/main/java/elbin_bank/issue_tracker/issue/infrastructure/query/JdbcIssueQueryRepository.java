@@ -4,13 +4,14 @@ import elbin_bank.issue_tracker.issue.application.query.repository.IssueQueryRep
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueCountProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.projection.IssueProjection;
 import elbin_bank.issue_tracker.issue.infrastructure.query.strategy.FilterStrategyContext;
-import elbin_bank.issue_tracker.label.application.query.dto.LabelDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,69 +22,66 @@ public class JdbcIssueQueryRepository implements IssueQueryRepository {
 
     @Override
     public List<IssueProjection> findIssues(String rawQuery) {
-        String baseSql = """
-                    SELECT i.id,
-                           u.nickname AS author,
-                           i.title,
-                           m.title AS milestone,
-                           i.is_closed,
-                           i.created_at,
-                           i.updated_at
-                      FROM issue i
-                 LEFT JOIN `user`    u ON i.author_id    = u.id
-                 LEFT JOIN milestone m ON i.milestone_id = m.id
+        String sql = """
+                     SELECT i.id,
+                            u.nickname AS author,
+                            i.title,
+                            m.title AS milestone,
+                            i.is_closed,
+                            i.created_at,
+                            i.updated_at
+                       FROM issue i
+                  LEFT JOIN `user`    u ON i.author_id    = u.id
+                  LEFT JOIN milestone m ON i.milestone_id = m.id
+                WHERE i.deleted_at IS NULL
                 """;
 
         var sqlAndParams = filterCtx.buildSql(rawQuery);
-        String finalSql = baseSql + sqlAndParams.sql();
+        String filterClause = sqlAndParams.sql();
 
-        return jdbc.query(finalSql, sqlAndParams.params(), (rs, rowNum) -> {
-            long id = rs.getLong("id");
-            var labels = fetchLabels(id);
-            var assignees = fetchAssignees(id);
-            return new IssueProjection(
-                    id,
-                    rs.getString("author"),
-                    rs.getString("title"),
-                    labels,
-                    rs.getBoolean("is_closed"),
-                    rs.getTimestamp("created_at").toLocalDateTime(),
-                    rs.getTimestamp("updated_at") != null
-                            ? rs.getTimestamp("updated_at").toLocalDateTime()
-                            : null,
-                    assignees,
-                    rs.getString("milestone")
-            );
-        });
-    }
+        if (!filterClause.isBlank()) {
+            sql = sql + " AND " + filterClause;
+        }
 
-    private List<LabelDto> fetchLabels(Long issueId) {
-        String sql = """
-                    SELECT l.id, l.name, l.description, l.color
-                      FROM label l
-                     JOIN issue_label il ON il.label_id = l.id
-                     WHERE il.issue_id = :iid
-                """;
-
-        return jdbc.query(sql, Map.of("iid", issueId),
-                (rs, rn) -> new LabelDto(
+        return jdbc.query(
+                sql,
+                sqlAndParams.params(),
+                (rs, rn) -> new IssueProjection(
                         rs.getLong("id"),
-                        rs.getString("name"),
-                        rs.getString("color"),
-                        rs.getString("description")
+                        rs.getString("author"),
+                        rs.getString("title"),
+                        rs.getBoolean("is_closed"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("updated_at") != null
+                                ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                : null,
+                        rs.getString("milestone")
                 )
         );
     }
 
-    private List<String> fetchAssignees(Long issueId) {
+    @Override
+    public Map<Long, List<String>> findAssigneesByIssueIds(List<Long> issueIds) {
         String sql = """
-                    SELECT u.profile_image_url
-                      FROM `user` u
-                     JOIN assignee a ON a.user_id = u.id
-                     WHERE a.issue_id = :iid
+                    SELECT a.issue_id, u.profile_image_url
+                      FROM assignee a
+                 JOIN `user` u ON u.id = a.user_id
+                     WHERE a.issue_id IN (:ids)
                 """;
 
-        return jdbc.queryForList(sql, Map.of("iid", issueId), String.class);
+        var params = new MapSqlParameterSource("ids", issueIds);
+        return jdbc.query(
+                        sql,
+                        params,
+                        (rs, rn) -> Map.entry(
+                                rs.getLong("issue_id"),
+                                rs.getString("profile_image_url")
+                        )
+                ).stream()
+                .collect(Collectors.groupingBy(
+                        Map.Entry::getKey,
+                        Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+                ));
     }
 
     @Override
