@@ -1,15 +1,15 @@
-package elbin_bank.issue_tracker.issue.application.query.dto;
+package elbin_bank.issue_tracker.issue.infrastructure.query.projection;
 
-import elbin_bank.issue_tracker.label.application.query.dto.LabelsDto;
+import elbin_bank.issue_tracker.label.application.query.dto.LabelDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-public record IssueDto(
+public record IssueProjection(
         Long id,
         String author,
         String title,
-        List<LabelsDto> labels,
+        List<LabelDto> labels,
         boolean isClosed,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
