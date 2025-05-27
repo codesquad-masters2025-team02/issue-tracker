@@ -24,14 +24,16 @@ CREATE TABLE `user`
 
 CREATE TABLE `milestone`
 (
-    `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `is_closed`   BOOLEAN      NOT NULL,
-    `title`       VARCHAR(255) NOT NULL,
-    `description` TEXT NULL,
-    `expired_at`  DATE NULL,
-    `created_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`  DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at`  DATETIME NULL
+    `id`            BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `is_closed`     BOOLEAN      NOT NULL,
+    `title`         VARCHAR(255) NOT NULL,
+    `description`   TEXT NULL,
+    `expired_at`    DATE NULL,
+    `total_issues`  BIGINT       NOT NULL DEFAULT 0,
+    `closed_issues` BIGINT       NOT NULL DEFAULT 0,
+    `created_at`    DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`    DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`    DATETIME NULL
 );
 
 CREATE TABLE `issue`
@@ -52,7 +54,7 @@ CREATE TABLE `issue`
 CREATE TABLE `label`
 (
     `id`          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name`        VARCHAR(255) NOT NULL,
+    `name`        VARCHAR(255) NOT NULL UNIQUE,
     `description` VARCHAR(255) NULL,
     `color`       VARCHAR(255) NOT NULL,
     `created_at`  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -93,8 +95,6 @@ CREATE TABLE `issue_label`
 
 CREATE TABLE issue_status_count
 (
-    id           BIGINT UNSIGNED NOT NULL PRIMARY KEY CHECK (id = 1),
-    open_count   BIGINT    NOT NULL DEFAULT 0,
-    closed_count BIGINT    NOT NULL DEFAULT 0,
-    updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    status_key  VARCHAR(20) NOT NULL PRIMARY KEY,
+    issue_count BIGINT      NOT NULL DEFAULT 0
 );
