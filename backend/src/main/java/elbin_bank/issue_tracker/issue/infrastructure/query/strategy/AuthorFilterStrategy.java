@@ -6,12 +6,11 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 @Component
-public class StateFilterStrategy implements FilterStrategy {
+public class AuthorFilterStrategy implements FilterStrategy {
 
     @Override
     public boolean supports(FilterCriteria c) {
-        // 항상 isClosed 조건은 들어가도록
-        return true;
+        return c.author() != null;
     }
 
     @Override
@@ -21,8 +20,8 @@ public class StateFilterStrategy implements FilterStrategy {
 
     @Override
     public void applyWhere(StringBuilder where, Map<String, Object> params, FilterCriteria c) {
-        where.append(" AND i.is_closed = :isClosed");
-        params.put("isClosed", c.isClosed());
+        where.append(" AND a.login = :author");
+        params.put("author", c.author());
     }
 
     @Override
