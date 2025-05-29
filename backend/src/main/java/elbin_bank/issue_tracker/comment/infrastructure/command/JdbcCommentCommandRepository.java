@@ -1,7 +1,7 @@
 package elbin_bank.issue_tracker.comment.infrastructure.command;
 
+import elbin_bank.issue_tracker.comment.domain.Comment;
 import elbin_bank.issue_tracker.comment.domain.CommentCommandRepository;
-import elbin_bank.issue_tracker.comment.presentation.command.dto.request.CommentCreateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,9 +14,7 @@ public class JdbcCommentCommandRepository implements CommentCommandRepository {
     private final NamedParameterJdbcTemplate jdbc;
 
     @Override
-    public void save(CommentCreateRequestDto commentCreateRequestDto, long id) {
-        Long mockUserId = 1L; // todo: 로그인 구현 후 변경 예정
-
+    public void save(Comment comment) {
         String sql = """
                     INSERT INTO comment
                       (issue_id, user_id, contents)
@@ -25,9 +23,9 @@ public class JdbcCommentCommandRepository implements CommentCommandRepository {
                 """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("issueId", id)
-                .addValue("userId", mockUserId)
-                .addValue("contents", commentCreateRequestDto.content());
+                .addValue("issueId", comment.getIssueId())
+                .addValue("userId", comment.getUserId())
+                .addValue("contents", comment.getContents());
 
         jdbc.update(sql, params);
     }

@@ -1,6 +1,6 @@
 package elbin_bank.issue_tracker.comment.presentation.command;
 
-import elbin_bank.issue_tracker.comment.domain.CommentCommandRepository;
+import elbin_bank.issue_tracker.comment.application.command.CommentCommandService;
 import elbin_bank.issue_tracker.comment.presentation.command.dto.request.CommentCreateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class CommentCommandController {
 
-    private final CommentCommandRepository commentCommandRepository;
+    private final CommentCommandService commentCommandService;
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Void> createComment(@RequestBody CommentCreateRequestDto commentCreateRequestDto, @PathVariable Long id){
-        commentCommandRepository.save(commentCreateRequestDto, id);
+    public ResponseEntity<Void> createComment(@RequestBody CommentCreateRequestDto commentCreateRequestDto, @PathVariable Long id) {
+        commentCommandService.createComment(commentCreateRequestDto, id);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
