@@ -27,16 +27,13 @@ public class S3Service {
     /**
      * 파일 이름을 받아 Presigned URL 발급
      */
-    public String getPreSignedUrl(String originalFileName) {
+    public String getPreSignedUrl(String originalFileName, String contentType) {
         String path = generateUniquePath(originalFileName);
 
         GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucket, path)
                 .withMethod(HttpMethod.PUT)
-                .withExpiration(getExpiration());
-
-        request.addRequestParameter(
-                Headers.S3_CANNED_ACL,
-                CannedAccessControlList.PublicRead.toString());
+                .withExpiration(getExpiration())
+                .withContentType(contentType);
 
         URL url = amazonS3.generatePresignedUrl(request);
 
