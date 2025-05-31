@@ -7,6 +7,7 @@ import elbin_bank.issue_tracker.common.exception.EntityNotFoundException;
 import elbin_bank.issue_tracker.common.exception.ForbiddenException;
 import elbin_bank.issue_tracker.issue.exception.IssueDetailNotFoundException;
 import elbin_bank.issue_tracker.issue.exception.MilestoneForIssueNotFoundException;
+import elbin_bank.issue_tracker.label.exception.LabelNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,7 +22,7 @@ public class GlobalExceptionHandler {
     }
 
     // 조회 결과가 없을 때 404만
-    @ExceptionHandler({IssueDetailNotFoundException.class})
+    @ExceptionHandler({IssueDetailNotFoundException.class, LabelNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleNotFound() {
     }

@@ -31,7 +31,7 @@ public class CommentCommandController {
                                               @RequestAttribute("user") Long userId) {
         commentCommandService.updateComment(commentUpdateRequestDto, id, commentId, userId);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }
