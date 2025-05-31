@@ -1,7 +1,7 @@
 package elbin_bank.issue_tracker.auth.application.command;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import elbin_bank.issue_tracker.auth.application.command.dto.TokenDto;
+import elbin_bank.issue_tracker.auth.application.command.dto.TokenResponseDto;
 import elbin_bank.issue_tracker.auth.domain.JwtProvider;
 import elbin_bank.issue_tracker.auth.infrastructure.provider.GithubOAuthProvider;
 import elbin_bank.issue_tracker.auth.infrastructure.provider.dto.OAuthUserInfoDto;
@@ -28,7 +28,7 @@ public class OAuthLoginService {
     }
 
     @Transactional
-    public TokenDto handleGithubLogin(String code) {
+    public TokenResponseDto handleGithubLogin(String code) {
         // 1) code → AccessToken 교환
         String accessToken = githubOAuthProvider.getAccessToken(code);
 
@@ -56,7 +56,7 @@ public class OAuthLoginService {
         return doLogin(savedUser);
     }
 
-    private TokenDto doLogin(User user) {
+    private TokenResponseDto doLogin(User user) {
         cache.put(user.getUuid(), user.getId());
         return jwt.createJwt(user);
     }

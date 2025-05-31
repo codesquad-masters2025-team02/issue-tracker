@@ -1,6 +1,6 @@
 package elbin_bank.issue_tracker.auth.domain;
 
-import elbin_bank.issue_tracker.auth.application.command.dto.TokenDto;
+import elbin_bank.issue_tracker.auth.application.command.dto.TokenResponseDto;
 import elbin_bank.issue_tracker.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -23,7 +23,7 @@ public class JwtProvider {
     @Value("${jwt.expiration}")
     private long expirationTime;
 
-    public TokenDto createJwt(User user) {
+    public TokenResponseDto createJwt(User user) {
         long millis = System.currentTimeMillis();
         Date now = new Date(millis);
         Date expiration = new Date(millis + expirationTime);
@@ -36,7 +36,7 @@ public class JwtProvider {
                 .signWith(getKey(), Jwts.SIG.HS256) // 서명 알고리즘과 키 설정
                 .compact(); // JWT 생성
 
-        return new TokenDto(jwt, "Bearer");
+        return new TokenResponseDto(jwt, "Bearer");
     }
 
     /**

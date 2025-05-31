@@ -1,7 +1,7 @@
 package elbin_bank.issue_tracker.auth.application.command;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import elbin_bank.issue_tracker.auth.application.command.dto.TokenDto;
+import elbin_bank.issue_tracker.auth.application.command.dto.TokenResponseDto;
 import elbin_bank.issue_tracker.auth.domain.JwtProvider;
 import elbin_bank.issue_tracker.auth.exception.InvalidPasswordException;
 import elbin_bank.issue_tracker.auth.exception.UserAlreadyExistsException;
@@ -48,7 +48,7 @@ public class AuthCommandService {
     }
 
     @Transactional(readOnly = true)
-    public TokenDto login(LoginRequestDto dto) {
+    public TokenResponseDto login(LoginRequestDto dto) {
         User user = userCommandRepository.findByLogin(dto.login())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
 

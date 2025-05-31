@@ -2,14 +2,13 @@ package elbin_bank.issue_tracker.auth.presentation.command;
 
 import elbin_bank.issue_tracker.auth.application.command.AuthCommandService;
 import elbin_bank.issue_tracker.auth.application.command.OAuthLoginService;
-import elbin_bank.issue_tracker.auth.application.command.dto.TokenDto;
+import elbin_bank.issue_tracker.auth.application.command.dto.TokenResponseDto;
 import elbin_bank.issue_tracker.auth.presentation.command.dto.LoginRequestDto;
 import elbin_bank.issue_tracker.auth.presentation.command.dto.SignUpRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,12 +31,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto dto) {
-        TokenDto tokenDto = authCommandService.login(dto);
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.AUTHORIZATION, tokenDto.tokenType() + " " + tokenDto.accessToken())
-                .build();
+    public ResponseEntity<TokenResponseDto> login(@Valid @RequestBody LoginRequestDto dto) {
+        TokenResponseDto tokenResponseDto = authCommandService.login(dto);
+
+        return ResponseEntity.ok(tokenResponseDto);
     }
 
     @GetMapping("/oauth/github")
@@ -56,7 +53,7 @@ public class AuthController {
     }
 
     @GetMapping("/oauth/github/callback")
-    public ResponseEntity<Void> githubCallback(
+    public ResponseEntity<TokenResponseDto> githubCallback(
             @RequestParam("code") String code,
             @RequestParam("state") String state,
             HttpServletRequest request
@@ -71,12 +68,9 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        TokenDto tokenDto = oAuthLoginService.handleGithubLogin(code);
+        TokenResponseDto tokenResponseDto = oAuthLoginService.handleGithubLogin(code);
 
-        return ResponseEntity
-                .ok()
-                .header(HttpHeaders.AUTHORIZATION, tokenDto.tokenType() + " " + tokenDto.accessToken())
-                .build();
+        return ResponseEntity.ok(tokenResponseDto);
     }
 
 }
