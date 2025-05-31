@@ -23,10 +23,10 @@ public class GlobalExceptionHandler {
     public void handleNotFound() {
     }
 
-    // 그 외 서버 에러는 500만
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public void handleServerError() {
-    }
+//    // 그 외 서버 에러는 500만
+//    @ExceptionHandler(Exception.class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public void handleServerError() {
+//    }
 
 }

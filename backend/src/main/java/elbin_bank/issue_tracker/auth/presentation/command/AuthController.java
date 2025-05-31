@@ -24,7 +24,7 @@ public class AuthController {
     private final AuthCommandService authCommandService;
     private final OAuthLoginService oAuthLoginService;
 
-    @PostMapping("/register")
+    @PostMapping("/signup")
     public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequestDto signUpRequestDto) {
         authCommandService.register(signUpRequestDto);
 

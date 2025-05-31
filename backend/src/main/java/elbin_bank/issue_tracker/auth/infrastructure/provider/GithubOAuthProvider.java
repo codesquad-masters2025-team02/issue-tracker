@@ -89,7 +89,11 @@ public class GithubOAuthProvider {
             throw new IllegalStateException("GitHub 기본 사용자 정보 조회 실패");
         }
         Map userMap = userResp.getBody();
-        long providerId = (long) userMap.get("id");
+
+        // Jackson이 Integer로 변환하는 경우가 있어 Number로 처리
+        Number numberId = (Number) userMap.get("id");
+        Long providerId = numberId.longValue();
+
         String nickname = (String) userMap.get("login");
         String avatarUrl = (String) userMap.get("avatar_url");
 

@@ -140,6 +140,7 @@ public class JdbcUserCommandRepository implements UserCommandRepository {
                        github_id AS githubId,
                        login,
                        password,
+                       salt,
                        nickname,
                        profile_image_url AS profileImageUrl,
                        uuid
@@ -167,13 +168,14 @@ public class JdbcUserCommandRepository implements UserCommandRepository {
                        github_id AS githubId,
                        login,
                        password,
+                       salt,
                        nickname,
                        profile_image_url AS profileImageUrl,
                        uuid
                 FROM `user`
                 WHERE github_id = :oauthId
                 """;
-        var params = new MapSqlParameterSource("githubId", oauthId);
+        var params = new MapSqlParameterSource("oauthId", oauthId);
 
         return jdbc.query(sql, params, (rs, rowNum) ->
                 new User(rs.getLong("id"),

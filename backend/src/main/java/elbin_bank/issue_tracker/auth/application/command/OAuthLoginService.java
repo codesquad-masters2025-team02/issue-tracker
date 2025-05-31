@@ -51,9 +51,9 @@ public class OAuthLoginService {
                 uuid
         );
 
-        userCommandRepository.save(newUser);
+        User savedUser =userCommandRepository.save(newUser);
 
-        return doLogin(newUser);
+        return doLogin(savedUser);
     }
 
     private TokenDto doLogin(User user) {

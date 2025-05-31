@@ -33,8 +33,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String token = resolveToken(req);
 
-            if (token == null || !token.startsWith("Bearer ")) {
-                chain.doFilter(req, res);
+            if (token == null) {
+                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;
             }
 
