@@ -9,10 +9,10 @@ public interface UserCommandRepository {
 
     User save(User user);
 
-    Optional<User> findByUuid(String uuid);
-
     Optional<User> findByLogin(String login);
 
     Optional<User> findByOAuthId(long oauthId);
+
+    void deleteAssigneesFromIssue(long issueId, List<Long> assignees);
 
 }

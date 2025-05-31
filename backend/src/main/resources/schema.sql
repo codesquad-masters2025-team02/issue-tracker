@@ -45,7 +45,7 @@ CREATE TABLE `issue`
     `author_id`    BIGINT UNSIGNED NOT NULL,
     `milestone_id` BIGINT UNSIGNED NULL,
     `title`        VARCHAR(255) NOT NULL,
-    `contents`     TEXT         NULL,
+    `contents`     TEXT NULL,
     `is_closed`    BOOLEAN      NOT NULL,
     `created_at`   DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `updated_at`   DATETIME NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -80,18 +80,18 @@ CREATE TABLE `comment`
 
 CREATE TABLE `assignee`
 (
-    `id`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `user_id`  BIGINT UNSIGNED NOT NULL,
     `issue_id` BIGINT UNSIGNED NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
-    FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`)
+    `user_id`  BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (`issue_id`, `user_id`),
+    FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
 CREATE TABLE `issue_label`
 (
-    `id`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `issue_id` BIGINT UNSIGNED NOT NULL,
     `label_id` BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (`issue_id`, `label_id`),
     FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`),
     FOREIGN KEY (`label_id`) REFERENCES `label` (`id`)
 );

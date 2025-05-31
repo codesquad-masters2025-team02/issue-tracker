@@ -6,4 +6,6 @@ public interface LabelCommandRepository {
 
     void saveLabelsToIssue(Long issueId, List<Long> labelIds);
 
+    void deleteLabelsFromIssue(Long issueId, List<Long> labelIds);
+
 }

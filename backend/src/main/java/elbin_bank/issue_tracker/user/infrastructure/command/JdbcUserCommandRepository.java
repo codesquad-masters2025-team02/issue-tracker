@@ -24,10 +24,10 @@ public class JdbcUserCommandRepository implements UserCommandRepository {
             return;
         }
         String sql = """
-                    INSERT INTO assignee (issue_id, user_id)
-                    SELECT :issueId, u.id
-                      FROM `user` u
-                     WHERE u.id IN (:assignees)
+                INSERT IGNORE INTO assignee (issue_id, user_id)
+                SELECT :issueId, u.id
+                FROM `user` u
+                WHERE u.id IN (:assignees)
                 """;
 
         var params = new MapSqlParameterSource()
@@ -104,35 +104,6 @@ public class JdbcUserCommandRepository implements UserCommandRepository {
         jdbc.update(sql, params);
     }
 
-
-
-    @Override
-    public Optional<User> findByUuid(String uuid) {
-        String sql = """
-                SELECT id, 
-                       github_id AS githubId,
-                       login,
-                       password,
-                       nickname,
-                       profile_image_url AS profileImageUrl,
-                       uuid
-                FROM `user`
-                WHERE uuid = :uuid
-                """;
-        var params = new MapSqlParameterSource("uuid", uuid);
-
-        return jdbc.query(sql, params, (rs, rowNum) ->
-                new User(rs.getLong("id"),
-                        rs.getObject("githubId", Long.class),
-                        rs.getString("login"),
-                        rs.getString("password"),
-                        rs.getString("salt"),
-                        rs.getString("nickname"),
-                        rs.getString("profileImageUrl"),
-                        rs.getString("uuid"))
-        ).stream().findFirst();
-    }
-
     @Override
     public Optional<User> findByLogin(String login) {
         String sql = """
@@ -187,6 +158,23 @@ public class JdbcUserCommandRepository implements UserCommandRepository {
                         rs.getString("profileImageUrl"),
                         rs.getString("uuid"))
         ).stream().findFirst();
+    }
+
+    @Override
+    public void deleteAssigneesFromIssue(long issueId, List<Long> assignees) {
+        if (assignees == null || assignees.isEmpty()) {
+            return;
+        }
+
+        String sql = """
+                DELETE FROM assignee
+                WHERE issue_id = :issueId
+                AND user_id IN (:assignees)
+                """;
+        var params = new MapSqlParameterSource()
+                .addValue("issueId", issueId)
+                .addValue("assignees", assignees);
+        jdbc.update(sql, params);
     }
 
 }
