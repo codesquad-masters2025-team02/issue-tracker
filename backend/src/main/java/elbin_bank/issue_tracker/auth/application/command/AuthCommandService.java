@@ -2,17 +2,20 @@ package elbin_bank.issue_tracker.auth.application.command;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import elbin_bank.issue_tracker.auth.application.command.dto.TokenDto;
-import elbin_bank.issue_tracker.auth.exception.UserAlreadyExistsException;
 import elbin_bank.issue_tracker.auth.domain.JwtProvider;
+import elbin_bank.issue_tracker.auth.exception.InvalidPasswordException;
+import elbin_bank.issue_tracker.auth.exception.UserAlreadyExistsException;
 import elbin_bank.issue_tracker.auth.presentation.command.dto.LoginRequestDto;
 import elbin_bank.issue_tracker.auth.presentation.command.dto.SignUpRequestDto;
 import elbin_bank.issue_tracker.auth.util.PasswordEncoderUtil;
+import elbin_bank.issue_tracker.common.exception.EntityNotFoundException;
 import elbin_bank.issue_tracker.user.domain.User;
 import elbin_bank.issue_tracker.user.domain.UserCommandRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -25,25 +28,32 @@ public class AuthCommandService {
 
     @Transactional
     public void register(SignUpRequestDto dto) {
-        if (userCommandRepository.findByLogin(dto.login()).isPresent()) {
-            throw new UserAlreadyExistsException("이미 존재하는 로그인입니다.");
+        Optional<User> user = userCommandRepository.findByLogin(dto.login());
+
+        if (user.isPresent()) {
+            throw new UserAlreadyExistsException("이미 존재하는 사용자입니다.");
         }
+
+        if (user.get().getNickname().equals(dto.nickname())) {
+            throw new UserAlreadyExistsException("이미 존재하는 닉네임입니다.");
+        }
+
         String uuid = UUID.randomUUID().toString();
         String salt = PasswordEncoderUtil.generateSalt();
         String hash = PasswordEncoderUtil.hashPassword(dto.password(), salt);
 
-        User user = User.createByLogin(dto.login(), hash, salt, dto.nickname(), dto.profileImageUrl(), uuid);
+        User newUser = User.createByLogin(dto.login(), hash, salt, dto.nickname(), dto.profileImageUrl(), uuid);
 
-        userCommandRepository.save(user);
+        userCommandRepository.save(newUser);
     }
 
     @Transactional(readOnly = true)
     public TokenDto login(LoginRequestDto dto) {
         User user = userCommandRepository.findByLogin(dto.login())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
+                .orElseThrow(() -> new EntityNotFoundException("존재하지 않는 사용자입니다."));
 
         if (!PasswordEncoderUtil.verifyPassword(dto.password(), user.getSalt(), user.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+            throw new InvalidPasswordException("비밀번호가 일치하지 않습니다.");
         }
         // 캐시에 사용자 UUID와 ID를 저장
         cache.put(user.getUuid(), user.getId());

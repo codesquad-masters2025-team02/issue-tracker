@@ -21,9 +21,9 @@ public class IssueCommandService {
     private final UserCommandRepository userCommandRepository;
 
     @Transactional
-    public IssueCreateResponseDto createIssue(IssueCreateRequestDto requestDto) {
+    public IssueCreateResponseDto createIssue(IssueCreateRequestDto requestDto, Long userId) {
         Issue issue = Issue.of(
-                1L, // todo jwt에서 꺼내와야댐
+                userId,
                 requestDto.title(),
                 requestDto.content(),
                 requestDto.milestone(),

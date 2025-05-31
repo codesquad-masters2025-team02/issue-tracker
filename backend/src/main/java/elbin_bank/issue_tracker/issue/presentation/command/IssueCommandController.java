@@ -17,8 +17,9 @@ public class IssueCommandController {
     private final IssueCommandService issueCommandService;
 
     @PostMapping("")
-    public ResponseEntity<IssueCreateResponseDto> createIssue(@RequestBody IssueCreateRequestDto issueCreateRequestDto) {
-        IssueCreateResponseDto issueCreateResponseDto = issueCommandService.createIssue(issueCreateRequestDto);
+    public ResponseEntity<IssueCreateResponseDto> createIssue(@RequestBody IssueCreateRequestDto issueCreateRequestDto,
+                                                              @RequestAttribute("user") Long userId) {
+        IssueCreateResponseDto issueCreateResponseDto = issueCommandService.createIssue(issueCreateRequestDto, userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(issueCreateResponseDto);
     }

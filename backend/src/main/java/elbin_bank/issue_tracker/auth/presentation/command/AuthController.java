@@ -35,7 +35,7 @@ public class AuthController {
     public ResponseEntity<Void> login(@Valid @RequestBody LoginRequestDto dto) {
         TokenDto tokenDto = authCommandService.login(dto);
         return ResponseEntity
-                .noContent()
+                .ok()
                 .header(HttpHeaders.AUTHORIZATION, tokenDto.tokenType() + " " + tokenDto.accessToken())
                 .build();
     }
@@ -55,14 +55,8 @@ public class AuthController {
                 .build();
     }
 
-    /**
-     * 2) GitHub OAuth 콜백 엔드포인트
-     *    GitHub로부터 code, state를 쿼리 파라미터로 받는다.
-     *
-     * GET /api/v1/auth/oauth/github/callback?code=xxx&state=yyy
-     */
     @GetMapping("/oauth/github/callback")
-    public ResponseEntity<TokenDto> githubCallback(
+    public ResponseEntity<Void> githubCallback(
             @RequestParam("code") String code,
             @RequestParam("state") String state,
             HttpServletRequest request
@@ -77,11 +71,12 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        // 3) 핵심 OAuth 로그인 로직을 Service에 위임
-        TokenDto responseDto = oAuthLoginService.handleGithubLogin(code);
+        TokenDto tokenDto = oAuthLoginService.handleGithubLogin(code);
 
-        // 4) JWT를 JSON으로 반환
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity
+                .ok()
+                .header(HttpHeaders.AUTHORIZATION, tokenDto.tokenType() + " " + tokenDto.accessToken())
+                .build();
     }
 
 }
