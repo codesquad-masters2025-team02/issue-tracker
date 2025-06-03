@@ -29,7 +29,7 @@ public class LabelCommandService {
 
     @Transactional
     public void updateLabel(LabelUpdateRequestDto labelUpdateRequestDto, Long id) {
-        LabelProjection label = Optional.ofNullable(labelQueryRepository.findById(id))
+        LabelProjection label = labelQueryRepository.findById(id)
                 .orElseThrow(() -> new LabelNotFoundException(id));
 
         labelCommandRepository.update(label, labelUpdateRequestDto);
