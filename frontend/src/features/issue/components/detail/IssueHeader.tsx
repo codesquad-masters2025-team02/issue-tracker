@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import styled from '@emotion/styled';
 import usePatchIssueTitle from '@/features/issue/hooks/usePatchIssueTitle';
+import usePatchIssueState from '@/features/issue/hooks/usePatchIssueState';
 import IssueMeta from './IssueMeta';
 import IssueHeaderActions from './IssueHeaderActions';
 import TextInput from '@/shared/components/TextInput';
 
 interface IssueHeaderProps {
   isClosed: boolean;
-  issueNumber: number;
+  issueId: number;
   title: string;
   author: {
     id: number;
@@ -16,23 +17,29 @@ interface IssueHeaderProps {
   };
   createdAt: string;
   commentCount: number;
-  onToggleIssueState: () => void;
 }
 
 export default function IssueHeader({
   isClosed,
-  issueNumber,
+  issueId,
   title,
   author,
   createdAt,
   commentCount,
-  onToggleIssueState,
 }: IssueHeaderProps) {
-  const { mutate: patchTitle } = usePatchIssueTitle(issueNumber);
+  const { mutate: patchTitle } = usePatchIssueTitle(issueId);
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
 
   const isSubmitDisabled = editedTitle.trim() === title.trim();
+
+  const { mutate: toggleIssueState, isPending: isToggleLoading } =
+    usePatchIssueState(issueId);
+
+  const handleToggle = () => {
+    if (isToggleLoading) return;
+    toggleIssueState({ issueId, targetClosed: !isClosed });
+  };
 
   const handleSubmitEdit = () => {
     patchTitle(editedTitle);
@@ -57,7 +64,7 @@ export default function IssueHeader({
         ) : (
           <Title>
             <TitleText>{title}</TitleText>
-            <IssueNumber>#{issueNumber}</IssueNumber>
+            <IssueNumber>#{issueId}</IssueNumber>
           </Title>
         )}
 
@@ -67,7 +74,7 @@ export default function IssueHeader({
           onEditCancel={handleCancelEdit}
           onEditSubmit={handleSubmitEdit}
           isClosed={isClosed}
-          onToggleIssueState={onToggleIssueState}
+          onToggleIssueState={handleToggle}
           isSubmitDisabled={isSubmitDisabled}
         />
       </TopRow>
