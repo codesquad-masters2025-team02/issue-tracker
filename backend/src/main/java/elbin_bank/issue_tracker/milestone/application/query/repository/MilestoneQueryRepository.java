@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface MilestoneQueryRepository {
 
-    MilestoneUpdateProjection findById(Long id);
+    Optional<MilestoneUpdateProjection> findById(Long id);
 
     List<MilestoneShortProjection> findAllForSelectBox();
 

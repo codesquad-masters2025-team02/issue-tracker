@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +29,7 @@ public class MilestoneCommandService {
 
     @Transactional
     public void updateMilestone(MilestoneUpdateRequestDto milestoneUpdateRequestDto, Long id) {
-        MilestoneUpdateProjection milestone = Optional.ofNullable(milestoneQueryRepository.findById(id))
+        MilestoneUpdateProjection milestone = milestoneQueryRepository.findById(id)
                 .orElseThrow(() -> new MilestoneNotFoundException(id));
 
         LocalDate expiredAt = milestoneUpdateRequestDto.expiredAt() != null ? LocalDate.parse(milestoneUpdateRequestDto.expiredAt()) : null;

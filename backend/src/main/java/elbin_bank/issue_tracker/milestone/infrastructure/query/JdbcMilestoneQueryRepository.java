@@ -22,7 +22,7 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
     }
 
     @Override
-    public MilestoneUpdateProjection findById(Long id) {
+    public Optional<MilestoneUpdateProjection> findById(Long id) {
         String sql = """
                 SELECT id,
                        title,
@@ -34,12 +34,17 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
 
         var params = new MapSqlParameterSource("id", id);
 
-        return jdbc.queryForObject(sql, params, (rs, rowNum) -> new MilestoneUpdateProjection(
-                rs.getLong("id"),
-                rs.getString("title"),
-                rs.getString("expired_at"),
-                rs.getString("description")
-        ));
+        try{
+            MilestoneUpdateProjection milestoneUpdateProjection = jdbc.queryForObject(sql, params, (rs, rowNum) -> new MilestoneUpdateProjection(
+                    rs.getLong("id"),
+                    rs.getString("title"),
+                    rs.getString("expired_at"),
+                    rs.getString("description")
+            ));
+            return Optional.of(milestoneUpdateProjection);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     @Override
