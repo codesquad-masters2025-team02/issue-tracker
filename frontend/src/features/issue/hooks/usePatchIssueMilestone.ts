@@ -5,7 +5,7 @@ export const usePatchIssueMilestone = (issueId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (milestoneId: number) =>
+    mutationFn: (milestoneId: number | null) =>
       patchIssueMilestone(issueId, milestoneId),
     onSuccess: () => {
       queryClient.invalidateQueries({

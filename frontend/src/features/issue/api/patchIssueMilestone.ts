@@ -3,7 +3,7 @@ import fetchWithAuth from '@/shared/utils/fetchWithAuth';
 
 export const patchIssueMilestone = async (
   issueId: number,
-  milestoneId: number,
+  milestoneId: number | null,
 ) => {
   const response = await fetchWithAuth(API.ISSUE_MILESTONE(issueId), {
     method: 'PATCH',
