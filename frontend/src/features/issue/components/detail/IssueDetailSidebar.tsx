@@ -2,6 +2,10 @@ import useIssueLabels from '@/features/issue/hooks/useIssueLabels';
 import useIssueAssignees from '@/features/issue/hooks/useIssueAssignees';
 import useIssueMilestone from '@/features/issue/hooks/useIssueMilestone';
 
+import { usePutIssueLabels } from '@/features/issue/hooks/usePutIssueLabels';
+import { usePutIssueAssignees } from '@/features/issue/hooks/usePutIssueAssignees';
+import { usePatchIssueMilestone } from '@/features/issue/hooks/usePatchIssueMilestone';
+
 import IssueSidebar from '@/shared/components/sidebar';
 
 interface Props {
@@ -27,6 +31,10 @@ export default function IssueDetailSidebar({ issueId }: Props) {
     isError: isMilestoneError,
   } = useIssueMilestone(issueId);
 
+  const { mutate: mutateLabel } = usePutIssueLabels(issueId);
+  const { mutate: mutateAssignee } = usePutIssueAssignees(issueId);
+  const { mutate: mutateMilestone } = usePatchIssueMilestone(issueId);
+
   const isLoading = isLabelsLoading || isAssigneesLoading || isMilestoneLoading;
   const isError = isLabelsError || isAssigneesError || isMilestoneError;
 
@@ -40,11 +48,11 @@ export default function IssueDetailSidebar({ issueId }: Props) {
   return (
     <IssueSidebar
       initialAssigneeIds={selectedAssigneeIds}
-      onSaveAssignee={() => {}}
+      onSaveAssignee={mutateAssignee}
       initialLabelIds={selectedLabelIds}
-      onSaveLabel={() => {}}
+      onSaveLabel={mutateLabel}
       initialMilestoneId={selectedMilestoneId}
-      onSaveMilestone={() => {}}
+      onSaveMilestone={mutateMilestone}
     />
   );
 }
