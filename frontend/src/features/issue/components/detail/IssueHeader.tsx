@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import styled from '@emotion/styled';
+import usePatchIssueTitle from '@/features/issue/hooks/usePatchIssueTitle';
 import IssueMeta from './IssueMeta';
 import IssueHeaderActions from './IssueHeaderActions';
+import TextInput from '@/shared/components/TextInput';
 
 interface IssueHeaderProps {
   isClosed: boolean;
@@ -16,7 +19,6 @@ interface IssueHeaderProps {
   onToggleIssueState: () => void;
 }
 
-//TODO 편집 기능, 이슈 열림 토글 기능 추가시 prop도 추가
 export default function IssueHeader({
   isClosed,
   issueNumber,
@@ -26,12 +28,37 @@ export default function IssueHeader({
   commentCount,
   onToggleIssueState,
 }: IssueHeaderProps) {
+  const { mutate: patchTitle } = usePatchIssueTitle(issueNumber);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedTitle, setEditedTitle] = useState(title);
+
+  const isSubmitDisabled = editedTitle.trim() === title.trim();
+
+  const handleSubmitEdit = () => {
+    patchTitle(editedTitle);
+    setIsEditing(false);
+  };
+
+  const handleCancelEdit = () => {
+    setEditedTitle(title);
+    setIsEditing(false);
+  };
+
   return (
     <HeaderWrapper>
       <LeftSection>
-        <Title>
-          {title} <IssueNumber>#{issueNumber}</IssueNumber>
-        </Title>
+        {isEditing ? (
+          <TextInput
+            label="제목"
+            value={editedTitle}
+            onChange={e => setEditedTitle(e.target.value)}
+            placeholder="이슈의 제목을 입력해주세요"
+          />
+        ) : (
+          <Title>
+            {title} <IssueNumber>#{issueNumber}</IssueNumber>
+          </Title>
+        )}
 
         <IssueMeta
           isClosed={isClosed}
@@ -42,8 +69,13 @@ export default function IssueHeader({
       </LeftSection>
       <RightSection>
         <IssueHeaderActions
+          isEditing={isEditing}
+          onEditStart={() => setIsEditing(true)}
+          onEditCancel={handleCancelEdit}
+          onEditSubmit={handleSubmitEdit}
           isClosed={isClosed}
           onToggleIssueState={onToggleIssueState}
+          isSubmitDisabled={isSubmitDisabled}
         />
       </RightSection>
     </HeaderWrapper>
@@ -53,11 +85,13 @@ export default function IssueHeader({
 const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 16px;
 `;
 
 const LeftSection = styled.div`
   display: flex;
   flex-direction: column;
+  flex: 1;
   gap: 16px;
 `;
 
