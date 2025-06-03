@@ -76,4 +76,5 @@ const SideSection = styled.div`
   flex-direction: column;
   align-items: flex-end;
   gap: 16px;
+  min-width: 288px;
 `;

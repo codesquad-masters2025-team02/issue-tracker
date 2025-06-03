@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import useIssueLabels from '@/features/issue/hooks/useIssueLabels';
 import useIssueAssignees from '@/features/issue/hooks/useIssueAssignees';
 import useIssueMilestone from '@/features/issue/hooks/useIssueMilestone';
@@ -38,7 +39,6 @@ export default function IssueDetailSidebar({ issueId }: Props) {
   const isLoading = isLabelsLoading || isAssigneesLoading || isMilestoneLoading;
   const isError = isLabelsError || isAssigneesError || isMilestoneError;
 
-  if (isLoading) return null;
   if (isError) return <div>데이터를 불러오는 데 실패했습니다.</div>;
 
   const selectedAssigneeIds = issueAssignees.map(assignee => assignee.id);
@@ -46,13 +46,25 @@ export default function IssueDetailSidebar({ issueId }: Props) {
   const selectedMilestoneId = issueMilestone?.id ?? null;
 
   return (
-    <IssueSidebar
-      initialAssigneeIds={selectedAssigneeIds}
-      onSaveAssignee={mutateAssignee}
-      initialLabelIds={selectedLabelIds}
-      onSaveLabel={mutateLabel}
-      initialMilestoneId={selectedMilestoneId}
-      onSaveMilestone={mutateMilestone}
-    />
+    <SidebarWrapper visible={!isLoading}>
+      {!isLoading && (
+        <IssueSidebar
+          initialAssigneeIds={selectedAssigneeIds}
+          onSaveAssignee={mutateAssignee}
+          initialLabelIds={selectedLabelIds}
+          onSaveLabel={mutateLabel}
+          initialMilestoneId={selectedMilestoneId}
+          onSaveMilestone={mutateMilestone}
+        />
+      )}
+    </SidebarWrapper>
   );
 }
+
+const SidebarWrapper = styled.div<{ visible: boolean }>`
+  min-height: 300px;
+  min-width: 288px;
+  flex-shrink: 0;
+  opacity: ${({ visible }) => (visible ? 1 : 0)};
+  transition: opacity 0.3s ease-in-out;
+`;
