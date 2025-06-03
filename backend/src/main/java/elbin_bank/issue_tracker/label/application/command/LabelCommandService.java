@@ -1,6 +1,5 @@
 package elbin_bank.issue_tracker.label.application.command;
 
-import elbin_bank.issue_tracker.comment.exception.CommentNotFoundException;
 import elbin_bank.issue_tracker.label.application.query.repository.LabelQueryRepository;
 import elbin_bank.issue_tracker.label.domain.Label;
 import elbin_bank.issue_tracker.label.domain.LabelCommandRepository;
@@ -34,5 +33,10 @@ public class LabelCommandService {
                 .orElseThrow(() -> new LabelNotFoundException(id));
 
         labelCommandRepository.update(label, labelUpdateRequestDto);
+    }
+
+    @Transactional
+    public void deleteLabel(Long id) {
+        labelCommandRepository.deleteById(id);
     }
 }
