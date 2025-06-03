@@ -29,4 +29,11 @@ public class MilestoneCommandController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteMilestone(@PathVariable Long id) {
+        milestoneCommandService.deleteMilestone(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 }

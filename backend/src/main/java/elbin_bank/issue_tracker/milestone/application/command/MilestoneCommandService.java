@@ -38,4 +38,8 @@ public class MilestoneCommandService {
         milestoneCommandRepository.update(milestone, milestoneUpdateRequestDto.title(), milestoneUpdateRequestDto.description(), expiredAt);
     }
 
+    @Transactional
+    public void deleteMilestone(Long id) {
+        milestoneCommandRepository.deleteById(id);
+    }
 }

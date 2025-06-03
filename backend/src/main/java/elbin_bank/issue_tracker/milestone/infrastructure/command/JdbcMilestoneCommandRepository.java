@@ -3,7 +3,6 @@ package elbin_bank.issue_tracker.milestone.infrastructure.command;
 import elbin_bank.issue_tracker.milestone.domain.Milestone;
 import elbin_bank.issue_tracker.milestone.domain.MilestoneCommandRepository;
 import elbin_bank.issue_tracker.milestone.infrastructure.query.projection.MilestoneUpdateProjection;
-import elbin_bank.issue_tracker.milestone.presentation.command.dto.request.MilestoneUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -49,6 +48,18 @@ public class JdbcMilestoneCommandRepository implements MilestoneCommandRepositor
                 .addValue("expiredAt", expiredAt)
                 .addValue("id", milestone.id());
 
+        jdbc.update(sql, params);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        String sql = """
+                UPDATE milestone
+                SET deleted_at = CURRENT_TIMESTAMP
+                WHERE id = :id
+                """;
+
+        var params = new MapSqlParameterSource().addValue("id", id);
         jdbc.update(sql, params);
     }
 
