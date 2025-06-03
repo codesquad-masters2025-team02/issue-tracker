@@ -9,24 +9,42 @@ interface Props {
 }
 
 export default function IssueDetailSidebar({ issueId }: Props) {
-  const { issueLabels } = useIssueLabels(issueId);
-  const { issueAssignees } = useIssueAssignees(issueId);
-  const { issueMilestone } = useIssueMilestone(issueId);
+  const {
+    issueLabels,
+    isLoading: isLabelsLoading,
+    isError: isLabelsError,
+  } = useIssueLabels(issueId);
+
+  const {
+    issueAssignees,
+    isLoading: isAssigneesLoading,
+    isError: isAssigneesError,
+  } = useIssueAssignees(issueId);
+
+  const {
+    issueMilestone,
+    isLoading: isMilestoneLoading,
+    isError: isMilestoneError,
+  } = useIssueMilestone(issueId);
+
+  const isLoading = isLabelsLoading || isAssigneesLoading || isMilestoneLoading;
+  const isError = isLabelsError || isAssigneesError || isMilestoneError;
+
+  if (isLoading) return null;
+  if (isError) return <div>데이터를 불러오는 데 실패했습니다.</div>;
 
   const selectedAssigneeIds = issueAssignees.map(assignee => assignee.id);
   const selectedLabelIds = issueLabels.map(label => label.id);
   const selectedMilestoneId = issueMilestone?.id ?? null;
 
-  // TODO 로딩, 에러 처리 분기
-
   return (
     <IssueSidebar
-      selectedAssigneeIds={selectedAssigneeIds}
-      onToggleAssignee={() => {}}
-      selectedLabelIds={selectedLabelIds}
-      onToggleLabel={() => {}}
-      selectedMilestoneId={selectedMilestoneId}
-      onSelectMilestone={() => {}}
+      initialAssigneeIds={selectedAssigneeIds}
+      onSaveAssignee={() => {}}
+      initialLabelIds={selectedLabelIds}
+      onSaveLabel={() => {}}
+      initialMilestoneId={selectedMilestoneId}
+      onSaveMilestone={() => {}}
     />
   );
 }
