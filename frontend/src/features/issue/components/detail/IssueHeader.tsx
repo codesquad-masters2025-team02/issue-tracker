@@ -46,7 +46,7 @@ export default function IssueHeader({
 
   return (
     <HeaderWrapper>
-      <LeftSection>
+      <TopRow>
         {isEditing ? (
           <TextInput
             label="제목"
@@ -56,18 +56,11 @@ export default function IssueHeader({
           />
         ) : (
           <Title>
-            {title} <IssueNumber>#{issueNumber}</IssueNumber>
+            <TitleText>{title}</TitleText>
+            <IssueNumber>#{issueNumber}</IssueNumber>
           </Title>
         )}
 
-        <IssueMeta
-          isClosed={isClosed}
-          createdAt={createdAt}
-          authorName={author.nickname}
-          commentCount={commentCount}
-        />
-      </LeftSection>
-      <RightSection>
         <IssueHeaderActions
           isEditing={isEditing}
           onEditStart={() => setIsEditing(true)}
@@ -77,40 +70,50 @@ export default function IssueHeader({
           onToggleIssueState={onToggleIssueState}
           isSubmitDisabled={isSubmitDisabled}
         />
-      </RightSection>
+      </TopRow>
+
+      <IssueMeta
+        isClosed={isClosed}
+        createdAt={createdAt}
+        authorName={author.nickname}
+        commentCount={commentCount}
+      />
     </HeaderWrapper>
   );
 }
 
 const HeaderWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
-`;
-
-const LeftSection = styled.div`
-  display: flex;
   flex-direction: column;
-  flex: 1;
   gap: 16px;
 `;
 
-const RightSection = styled.div`
+const TopRow = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
   gap: 16px;
-  height: 48px;
+  min-height: 48px;
 `;
 
 const Title = styled.h1`
-  display: flex;
-  align-items: flex-start;
+  display: inline;
+  flex-wrap: wrap;
   gap: 8px;
 
   color: ${({ theme }) => theme.neutral.text.strong};
   ${({ theme }) => theme.typography.displayBold32};
 `;
 
+const TitleText = styled.span`
+  flex: 1;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  margin-right: 8px;
+`;
+
 const IssueNumber = styled.span`
+  align-self: flex-start;
   color: ${({ theme }) => theme.neutral.text.weak};
+  white-space: nowrap;
 `;

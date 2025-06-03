@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import Button from '@/shared/components/Button';
 import EditIcon from '@/assets/icons/edit.svg?react';
 import CheckIcon from '@/assets/icons/chevronDown.svg?react';
@@ -24,7 +25,7 @@ export default function IssueHeaderActions({
   isSubmitDisabled,
 }: Props) {
   return (
-    <>
+    <ButtonGroup>
       {isEditing ? (
         <>
           <Button
@@ -36,7 +37,7 @@ export default function IssueHeaderActions({
             편집 취소
           </Button>
           <Button
-            variant="outline"
+            variant="contained"
             size="small"
             icon={<CheckIcon />}
             onClick={onEditSubmit}
@@ -65,6 +66,12 @@ export default function IssueHeaderActions({
           </Button>
         </>
       )}
-    </>
+    </ButtonGroup>
   );
 }
+
+const ButtonGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
