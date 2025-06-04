@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class IssueDtoMapper {
@@ -79,13 +80,18 @@ public class IssueDtoMapper {
         );
     }
 
-    public MilestoneResponseDto toMilestoneResponseDto(MilestoneProjection milestoneProjection) {
-        int progressRate = ProgressRateCalculator.calculate(milestoneProjection.totalIssueCount(),
-                milestoneProjection.closedIssueCount());
+    public MilestoneResponseDto toMilestoneResponseDto(Optional<MilestoneProjection> milestoneProjection) {
+        if (milestoneProjection.isEmpty()) {
+            return null;
+        }
+
+        MilestoneProjection milestone = milestoneProjection.get();
+        int progressRate = ProgressRateCalculator.calculate(milestone.totalIssueCount(),
+                milestone.closedIssueCount());
 
         return new MilestoneResponseDto(
-                milestoneProjection.id(),
-                milestoneProjection.title(),
+                milestone.id(),
+                milestone.title(),
                 progressRate
         );
     }

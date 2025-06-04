@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@RestControllerAdvice(basePackages = "elbin_bank.issue_tracker")
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler({MilestoneForIssueNotFoundException.class, CommentNotFoundException.class})
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public void handleUnauthorized() {
+    public void handleForbidden() {
     }
 
     // 그 외 서버 에러는 500만
