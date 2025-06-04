@@ -45,10 +45,10 @@ public class MilestoneCommandService {
 
     @Transactional
     public void changeMilestoneState(Long id, MilestoneUpdateStateRequestDto milestoneUpdateStateRequestDto) {
-        Milestone milestone = milestoneCommandRepository.findById(id);
+        Milestone milestone = milestoneCommandRepository.findById(id)
+                .orElseThrow(() -> new MilestoneNotFoundException(id));
 
-        milestone.setClosed(milestoneUpdateStateRequestDto.targetClosed());
-        milestoneCommandRepository.save(milestone);
+        milestoneCommandRepository.updateState(milestone.getId(), milestoneUpdateStateRequestDto.targetClosed());
     }
 
 }
