@@ -58,7 +58,6 @@ public class IssueMilestoneChangedListener {
     @EventListener
     public void onIssueDeleteMilestoneEvent(IssueMilestoneDeleteEvent event) {
         Long milestoneId = event.milestoneId();
-        System.out.println(event);
         if (milestoneId != null) {
             milestoneCommandRepository.adjustTotalIssues(milestoneId, -1);
             if (event.isClosed()) {

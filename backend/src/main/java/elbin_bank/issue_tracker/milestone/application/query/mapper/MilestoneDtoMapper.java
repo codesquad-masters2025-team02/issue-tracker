@@ -17,6 +17,10 @@ public class MilestoneDtoMapper {
                         i.id(),
                         i.title(),
                         i.expiredAt(),
+                        ProgressRateCalculator.calculate(
+                                i.totalIssueCount(),
+                                i.closedIssueCount()
+                        ),
                         i.totalIssueCount(),
                         i.closedIssueCount()
                 )).toList()
