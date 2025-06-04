@@ -5,6 +5,7 @@ public record MilestoneProjection(
         String title,
         String description,
         String expiredAt,
+        boolean isClosed,
         long totalIssueCount,
         long closedIssueCount
 ) {

@@ -6,6 +6,7 @@ public record MilestoneDto(
         String description,
         String expiredAt,
         int progressRate,
+        boolean isClosed,
         long totalIssueCount,
         long closedIssueCount
 ) {

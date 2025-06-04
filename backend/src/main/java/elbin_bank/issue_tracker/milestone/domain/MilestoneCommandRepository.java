@@ -16,4 +16,6 @@ public interface MilestoneCommandRepository {
 
     void adjustClosedIssues(long milestoneId, long delta);
 
+    Milestone findById(Long id);
+
 }

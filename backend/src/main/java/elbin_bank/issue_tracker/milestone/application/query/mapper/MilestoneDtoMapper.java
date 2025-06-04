@@ -22,6 +22,7 @@ public class MilestoneDtoMapper {
                                 i.totalIssueCount(),
                                 i.closedIssueCount()
                         ),
+                        i.isClosed(),
                         i.totalIssueCount(),
                         i.closedIssueCount()
                 )).toList()

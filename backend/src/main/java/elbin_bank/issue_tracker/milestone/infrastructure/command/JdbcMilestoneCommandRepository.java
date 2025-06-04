@@ -90,5 +90,25 @@ public class JdbcMilestoneCommandRepository implements MilestoneCommandRepositor
         jdbc.update(sql, params);
     }
 
+    @Override
+    public Milestone findById(Long id) {
+        String sql = """
+                SELECT id, is_closed, title, description, expired_at, total_issues, closed_issues
+                FROM milestone
+                WHERE id = :id AND deleted_at IS NULL
+                """;
+
+        var params = new MapSqlParameterSource().addValue("id", id);
+        return jdbc.queryForObject(sql, params, (rs, rowNum) ->
+            new Milestone(
+                rs.getLong("id"),
+                rs.getBoolean("is_closed"),
+                rs.getString("title"),
+                rs.getString("description"),
+                rs.getObject("expired_at", LocalDate.class)
+            )
+        );
+    }
+
 
 }
