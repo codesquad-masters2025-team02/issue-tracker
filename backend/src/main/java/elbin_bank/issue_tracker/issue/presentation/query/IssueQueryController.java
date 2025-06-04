@@ -37,7 +37,7 @@ public class IssueQueryController {
     public ResponseEntity<MilestoneResponseDto> getMilestoneForIssue(@PathVariable("id") long id) {
         return issueQueryService.getMilestoneForIssue(id)
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.noContent().build());
     }
 
 }

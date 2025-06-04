@@ -36,13 +36,14 @@ public class IssueDtoMapper {
         // 첫 번째 프로젝션에서 open/closed count 꺼내기 (null-safe)
         long openCount = issueProjections.stream()
                 .findFirst()
-                // IssueProjection.openCount() 가 Long wrapper 라면 null 체크
-                .map(p -> p.openCount() != null ? p.openCount() : 0L)
+                .filter(p -> p.openCount() != null)
+                .map(IssueProjection::openCount)
                 .orElse(0L);
 
         long closedCount = issueProjections.stream()
                 .findFirst()
-                .map(p -> p.closedCount() != null ? p.closedCount() : 0L)
+                .filter(p -> p.closedCount() != null)
+                .map(IssueProjection::closedCount)
                 .orElse(0L);
 
         return new IssuesResponseDto(issueDtos, openCount, closedCount);

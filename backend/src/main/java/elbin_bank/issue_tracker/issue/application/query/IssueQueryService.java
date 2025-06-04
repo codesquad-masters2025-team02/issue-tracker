@@ -70,7 +70,7 @@ public class IssueQueryService {
 
     @Transactional(readOnly = true)
     public Optional<MilestoneResponseDto> getMilestoneForIssue(long id) {
-        return Optional.of(issueDtoMapper.toMilestoneResponseDto(milestoneQueryRepository.findByIssueId(id)));
+        return Optional.ofNullable(issueDtoMapper.toMilestoneResponseDto(milestoneQueryRepository.findByIssueId(id)));
     }
 
 }

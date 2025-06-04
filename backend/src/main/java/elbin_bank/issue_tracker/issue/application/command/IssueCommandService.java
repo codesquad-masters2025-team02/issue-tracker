@@ -83,7 +83,7 @@ public class IssueCommandService {
             return;
         }
 
-        issue.changeTitle(dto.title());
+        issue.setTitle(dto.title());
         issueCommandRepository.save(issue);
     }
 
@@ -96,7 +96,7 @@ public class IssueCommandService {
             return;
         }
 
-        issue.changeContents(dto.content());
+        issue.setContents(dto.content());
         issueCommandRepository.save(issue);
     }
 
@@ -110,7 +110,7 @@ public class IssueCommandService {
             return;
         }
 
-        issue.changeMilestone(dto.id());
+        issue.setMilestoneId(dto.id());
         issueCommandRepository.save(issue);
 
         if (dto.id() == null) {
