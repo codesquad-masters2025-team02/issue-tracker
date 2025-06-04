@@ -7,6 +7,7 @@ import elbin_bank.issue_tracker.common.exception.EntityNotFoundException;
 import elbin_bank.issue_tracker.common.exception.ForbiddenException;
 import elbin_bank.issue_tracker.issue.exception.IssueDetailNotFoundException;
 import elbin_bank.issue_tracker.issue.exception.MilestoneForIssueNotFoundException;
+import elbin_bank.issue_tracker.label.exception.LabelNameDuplicateException;
 import elbin_bank.issue_tracker.label.exception.LabelNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +28,7 @@ public class GlobalExceptionHandler {
     public void handleBadRequest() {
     }
 
-    @ExceptionHandler(UserAlreadyExistsException.class)
+    @ExceptionHandler({UserAlreadyExistsException.class, LabelNameDuplicateException.class})
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleConflict() {
     }
