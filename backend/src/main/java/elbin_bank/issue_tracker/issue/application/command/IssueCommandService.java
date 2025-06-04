@@ -79,6 +79,10 @@ public class IssueCommandService {
         Issue issue = issueCommandRepository.findById(issueId)
                 .orElseThrow(() -> new IssueDetailNotFoundException(issueId));
 
+        if (issue.getTitle().equals(dto.title())) {
+            return;
+        }
+
         issue.changeTitle(dto.title());
         issueCommandRepository.save(issue);
     }
@@ -87,6 +91,10 @@ public class IssueCommandService {
     public void updateContent(long issueId, IssueContentUpdateRequestDto dto) {
         Issue issue = issueCommandRepository.findById(issueId)
                 .orElseThrow(() -> new IssueDetailNotFoundException(issueId));
+
+        if (issue.getContents().equals(dto.content())) {
+            return;
+        }
 
         issue.changeContents(dto.content());
         issueCommandRepository.save(issue);
@@ -98,6 +106,9 @@ public class IssueCommandService {
                 .orElseThrow(() -> new IssueDetailNotFoundException(issueId));
 
         Long beforeMilestoneId = issue.getMilestoneId();
+        if (beforeMilestoneId != null && beforeMilestoneId.equals(dto.id())) {
+            return;
+        }
 
         issue.changeMilestone(dto.id());
         issueCommandRepository.save(issue);
@@ -126,6 +137,9 @@ public class IssueCommandService {
                 .toList();
 
         List<Long> assignees = dto.assignees();
+        if (assignees.equals(existingUserIds)) {
+            return;
+        }
 
         List<Long> toRemove = existingUserIds.stream()
                 .filter(id -> !assignees.contains(id))
@@ -143,6 +157,9 @@ public class IssueCommandService {
         List<Long> existingLabels = labelQueryRepository.findLabelIdsByIssueId(issueId);
 
         List<Long> labels = dto.labels();
+        if (labels.equals(existingLabels)) {
+            return;
+        }
 
         List<Long> toRemove = existingLabels.stream()
                 .filter(id -> !labels.contains(id))
