@@ -23,23 +23,23 @@ public class WebConfig {
         return new RestTemplate();
     }
 
-    @Bean
-    public FilterRegistrationBean<Filter> jwtFilterRegistration() {
-        FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
-
-        // 1) JwtAuthenticationFilter 인스턴스 생성
-        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwt, userCache);
-
-        // 2) 필터 등록
-        registration.setFilter(jwtFilter);
-
-        // 3) 모든 경로("/*")에 대해 필터가 동작하도록 설정
-        registration.addUrlPatterns("/api/*");
-
-        // 4) 순서를 가장 높게 설정 (가장 먼저 실행)
-        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
-
-        return registration;
-    }
+//    @Bean
+//    public FilterRegistrationBean<Filter> jwtFilterRegistration() {
+//        FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
+//
+//        // 1) JwtAuthenticationFilter 인스턴스 생성
+//        JwtAuthenticationFilter jwtFilter = new JwtAuthenticationFilter(jwt, userCache);
+//
+//        // 2) 필터 등록
+//        registration.setFilter(jwtFilter);
+//
+//        // 3) 모든 경로("/*")에 대해 필터가 동작하도록 설정
+//        registration.addUrlPatterns("/api/*");
+//
+//        // 4) 순서를 가장 높게 설정 (가장 먼저 실행)
+//        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+//
+//        return registration;
+//    }
 
 }

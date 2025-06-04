@@ -74,6 +74,7 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                 SELECT
                   m.id            AS id,
                   m.title         AS title,
+                  m.expired_at    AS expiredAt,
                   m.total_issues  AS totalIssueCount,
                   m.closed_issues AS closedIssueCount
                 FROM milestone m
@@ -87,6 +88,7 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                 (rs, rn) -> new MilestoneProjection(
                         rs.getLong("id"),
                         rs.getString("title"),
+                        rs.getString("expiredAt"),
                         rs.getLong("totalIssueCount"),
                         rs.getLong("closedIssueCount")
                 )
@@ -99,6 +101,7 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                 SELECT
                   m.id            AS id,
                   m.title         AS title,
+                  m.expired_at    AS expiredAt,
                   m.total_issues  AS totalIssueCount,
                   m.closed_issues AS closedIssueCount
                 FROM milestone m
@@ -116,6 +119,7 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                     (rs, rowNum) -> new MilestoneProjection(
                             rs.getLong("id"),
                             rs.getString("title"),
+                            rs.getString("expiredAt"),
                             rs.getLong("totalIssueCount"),
                             rs.getLong("closedIssueCount")
                     )

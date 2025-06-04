@@ -52,6 +52,10 @@ public class Issue extends BaseEntity {
     }
 
     public void changeMilestone(Long milestoneId) {
+        if (milestoneId == null && this.milestoneId == null) {
+            return;
+        }
+
         if (this.milestoneId != null && this.milestoneId.equals(milestoneId)) {
             return;
         }

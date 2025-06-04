@@ -63,5 +63,32 @@ public class JdbcMilestoneCommandRepository implements MilestoneCommandRepositor
         jdbc.update(sql, params);
     }
 
+    @Override
+    public void adjustTotalIssues(long milestoneId, long delta) {
+        String sql = """
+                    UPDATE milestone
+                       SET total_issues = total_issues + :delta
+                     WHERE id = :id
+                """;
+        var params = new MapSqlParameterSource()
+                .addValue("delta", delta)
+                .addValue("id", milestoneId);
+        jdbc.update(sql, params);
+    }
+
+    @Override
+    public void adjustClosedIssues(long milestoneId, long delta) {
+        String sql = """
+                    UPDATE milestone
+                       SET closed_issues = closed_issues + :delta
+                     WHERE id = :id
+                """;
+
+        var params = new MapSqlParameterSource()
+                .addValue("delta", delta)
+                .addValue("id", milestoneId);
+        jdbc.update(sql, params);
+    }
+
 
 }

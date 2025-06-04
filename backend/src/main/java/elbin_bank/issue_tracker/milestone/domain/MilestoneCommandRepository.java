@@ -11,4 +11,9 @@ public interface MilestoneCommandRepository {
     void update(MilestoneUpdateProjection milestone, String title, String description, LocalDate expiredAt);
 
     void deleteById(Long id);
+
+    void adjustTotalIssues(long milestoneId, long delta);
+
+    void adjustClosedIssues(long milestoneId, long delta);
+
 }
