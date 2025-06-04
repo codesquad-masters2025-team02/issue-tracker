@@ -16,13 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({MilestoneForIssueNotFoundException.class, CommentNotFoundException.class})
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void handleNoContent() {
-    }
-
-    // 조회 결과가 없을 때 404만
-    @ExceptionHandler({IssueDetailNotFoundException.class, LabelNotFoundException.class})
+    @ExceptionHandler({IssueDetailNotFoundException.class, LabelNotFoundException.class, CommentNotFoundException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleNotFound() {
     }
