@@ -89,8 +89,8 @@ public class JdbcMilestoneQueryRepository implements MilestoneQueryRepository {
                 (rs, rn) -> new MilestoneProjection(
                         rs.getLong("id"),
                         rs.getString("title"),
-                        rs.getString("expiredAt"),
                         rs.getString("description"),
+                        rs.getString("expiredAt"),
                         rs.getLong("totalIssueCount"),
                         rs.getLong("closedIssueCount")
                 )
