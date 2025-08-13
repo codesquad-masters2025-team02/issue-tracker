@@ -44,3 +44,10 @@
 | 📌 IssueTemplate | [Issue 템플릿](./.github/ISSUE_TEMPLATE)        |
 | 🐛 PR Template   | [PR 템플릿](./.github/pull_request_template.md) |
 
+---
+
+## 📌 ERD
+
+<img width="713" height="1358" alt="issue_tracker_ERD" src="https://github.com/user-attachments/assets/1457850a-5281-4262-9aac-790d4ad660e5" />
+
+
